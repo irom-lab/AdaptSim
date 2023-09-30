@@ -1,0 +1,188 @@
+seed: 42
+device: cuda:0
+num_env: 1
+
+exp_name: pretrain_dp
+out_folder: result/${exp_name}
+data_folder: ${out_folder}/data
+agent: Adapt
+eval: False
+task: DP-Linearized
+
+wandb:
+  entity:
+  project:
+  name: ${exp_name}
+
+env:
+  render: False
+  name: ${task}
+  max_train_steps: 1
+  max_eval_steps: 1
+  action_dim: 2
+  dt: 0 # continuous
+  specific: 
+    max_t: 2.5
+
+adapt:
+  max_itr: 1
+  num_adapt_init: 10000
+  num_adapt: 0
+  init_inference_update_wait: 100
+  inference_update_freq: 10
+  num_adapt_step: 10
+  replay_ratio: 8
+  batch_size: 64
+  eval_target_reward: True
+  eval_freq: 50
+  reward_threshold_upper: 1
+  reward_threshold_lower: 0
+  spawn:
+    num_particle_init: 100
+    num_particle: 0
+    inner_perturbation: 0.1
+    meta_perturbation: 0.1
+    kill_freq:
+    reward_threshold:
+  num_meta_target_task: 1
+  num_inner_target_task: 1
+  num_task_train: 1
+  num_meta_eval_episode: 20
+  eps_init:
+    init: 1.0
+    period: 400  # every k adapt
+    end: 0.1
+    step: -0.05
+  eps:
+    init: 0.5
+    period: 10
+    end: 0.1
+    step: -0.1
+  meta_policy_option: raw
+  inner_policy_option: raw
+
+inference:
+  seed: ${seed}
+  device: ${device}
+  eval: ${eval}
+  memory_capacity: 10000
+  lr_c: 0.0003
+  lr_c_schedule: false
+  tau: 0.01
+  single_step: False
+  gamma: 0.9
+  #
+  num_feature: 24  # 12 snapshot of q
+  arch:
+    state_only: True
+    skip_dim: 0
+    mlp_dim:
+      critic: [128, 128]
+    append_dim:
+      critic: 0
+    critic_path:
+
+util:
+  name: ${task}
+  seed: ${seed}
+  traj_len: 12
+  skip: 80 # 1000 steps from eval
+  reward_scaling: 10
+  target_obs: q_snapshot
+  a_scaling: [0.01, 0.01]
+
+policy:
+  name: Linearized
+  seed: ${seed}
+  device: ${device}
+  out_folder: ${data_folder}/policy
+  num_env: ${num_env}
+  action_dim: ${env.action_dim}
+  max_steps_train: ${env.max_train_steps}
+  max_steps_eval: ${env.max_eval_steps}
+  eval: ${eval}
+  epoch: 0
+  num_episode_per_epoch: 50
+  lr: 0.0003
+  grad_clip: 1000
+  state_dim: 4
+  Q_gain: 1.0
+  policy_path:
+  perturb_mag: 0.2
+  num_step_eval_low: 50
+  num_step_eval_high: 1000
+
+param:
+  name: ${task}
+  seed: ${seed}
+  device: ${device}
+  data_path: ${data_folder}
+  num_param_bin_for_continuous: 3
+  sample_ood_full_width_fraction: 1.0
+  param:
+    M1:
+      dist: gaussian
+      step: 0.1
+      minimum: 1
+      maximum: 2
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+    M2:
+      dist: gaussian
+      step: 0.1
+      minimum: 1
+      maximum: 2
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+    B1:
+      dist: gaussian
+      step: 0.1
+      minimum: 1
+      maximum: 2
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+    B2:
+      dist: gaussian
+      step: 0.1
+      minimum: 1
+      maximum: 2
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+
+param_target:
+  seed: ${seed}
+  device: ${device}
+  data_path: ${data_folder}
+  param:
+    M1:
+      dist: uniform
+      range:
+        - 1.8
+        - 1.8
+      fixed: true
+    M2:
+      dist: uniform
+      range:
+        - 1.2
+        - 1.2
+      fixed: true
+    B1:
+      dist: uniform
+      range:
+        - 1.5
+        - 1.5
+      fixed: true
+    B2:
+      dist: uniform
+      range:
+        - 1.5
+        - 1.5
+      fixed: true

@@ -1,0 +1,23 @@
+np_seed: 42
+num_task: 2000
+parent_name: 'bottle_task/v2_adapt/'
+obj_mu_range:
+- 0.20
+- 0.20
+obj_modulus_range:
+- 5
+- 5
+obj_com_x_range:
+- -0.005
+- 0.005
+obj_com_y_range:
+- -0.010
+- -0.005
+
+goal:
+  radius_range:
+    - 0.25
+    - 0.40
+  yaw_range:
+    - -0.436  # 25 degrees
+    - 0.436

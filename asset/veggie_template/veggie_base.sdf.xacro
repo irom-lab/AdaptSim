@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+
+  <!-- Parameters -->
+  <xmacro_define_value name="link0" value="ellipsoid"/>
+  <xmacro_define_value name="link1" value="none"/>
+  <xmacro_define_value name="link2" value="none"/>
+
+  <!-- Base -->
+  <xmacro_define_value name="m0" value="0.01" />
+  <xmacro_define_value name="x0" value="0.02" />
+  <xmacro_define_value name="y0" value="0.02" />
+  <xmacro_define_value name="z0" value="0.005" />
+
+  <!-- Joint 0 -->
+  <xmacro_define_value name="x01" value="0.01" />
+  <xmacro_define_value name="y01" value="0.01" />
+  <xmacro_define_value name="z01" value="0.01" />
+  <xmacro_define_value name="roll01" value="0.01" />
+  <xmacro_define_value name="pitch01" value="0.01" />
+  <xmacro_define_value name="yaw01" value="0.01" />
+
+  <!-- Link 1 -->
+  <xmacro_define_value name="m1" value="0.01" />
+  <xmacro_define_value name="x1" value="0.02" />
+  <xmacro_define_value name="y1" value="0.02" />
+  <xmacro_define_value name="z1" value="0.005"/>
+
+  <!-- Joint 1 -->
+  <xmacro_define_value name="x02" value="0.01" />
+  <xmacro_define_value name="y02" value="0.01" />
+  <xmacro_define_value name="z02" value="0.01" />
+  <xmacro_define_value name="roll02" value="0.01" />
+  <xmacro_define_value name="pitch02" value="0.01" />
+  <xmacro_define_value name="yaw02" value="0.01" />
+
+  <!-- Link 2 -->
+  <xmacro_define_value name="m2" value="0.01" />
+  <xmacro_define_value name="x2" value="0.02" />
+  <xmacro_define_value name="y2" value="0.02" />
+  <xmacro_define_value name="z2" value="0.005"/>
+
+  <!-- Primitives -->
+  <xmacro_define_block name="pose" params="j">
+    <pose relative_to="${j}">0 0 0 0 0 0</pose>
+  </xmacro_define_block>
+
+  <xmacro_define_block name="joint" params="n parent child x y z roll pitch yaw">
+    <joint name="${n}" type="fixed">
+      <pose relative_to="${parent}">${x} ${y} ${z} ${roll} ${pitch} ${yaw}</pose>
+      <parent>${parent}</parent>
+      <child>${child}</child>
+      <!-- <axis>
+        <xyz>1 0 0</xyz>
+      </axis> -->
+    </joint>
+  </xmacro_define_block>
+
+  <!-- All dimensions are half -->
+  <xmacro_define_block name="ellipsoid" params="n j m x y z">
+    <link name="${n}">
+      <xmacro_block name="pose" j="${j}" condition="${j !='none'}"/>
+      <inertial>
+        <mass>${m}</mass>
+        <inertia>
+          <ixx>${m*(y*y+z*z)/5}</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>${m*(x*x+z*z)/5}</iyy>
+          <iyz>0</iyz>
+          <izz>${m*(x*x+y*y)/5}</izz>
+        </inertia>
+      </inertial>
+      <visual name="${n}_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>${x} ${y} ${z}</radii>
+          </ellipsoid>
+        </geometry>
+        <material>
+          <ambient>0.659 0.839 0.514 1</ambient>
+          <diffuse>0.659 0.839 0.514 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+      <collision name="${n}_collision">
+        <pose>0 0 0 0 0 0 </pose>
+        <geometry>
+          <ellipsoid>
+            <radii>${x} ${y} ${z}</radii>
+          </ellipsoid>
+        </geometry>
+      </collision>
+    </link>
+  </xmacro_define_block>
+
+  <xmacro_define_block name="box" params="n j m x y z">
+    <link name="${n}">
+      <xmacro_block name="pose" j="${j}" condition="${j !='none'}"/>
+      <inertial>
+        <mass>${m}</mass>
+        <inertia>
+          <ixx>${m*((2*y)*(2*y)+(2*z)*(2*z))/12}</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>${m*((2*x)*(2*x)+(2*z)*(2*z))/12}</iyy>
+          <iyz>0</iyz>
+          <izz>${m*((2*x)*(2*x)+(2*y)*(2*y))/12}</izz>
+        </inertia>
+      </inertial>
+      <visual name="${n}_visual">
+        <pose>0 0 0 0 0 0 </pose>
+        <geometry>
+          <box>
+            <size>${2*x} ${2*y} ${2*z}</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.659 0.839 0.514 1</ambient>
+          <diffuse>0.659 0.839 0.514 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+      <collision name='${n}_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>${2*x} ${2*y} ${2*z}</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+  </xmacro_define_block>
+
+  <xmacro_define_block name="cylinder" params="n j m r z">
+    <link name="${n}">
+      <xmacro_block name="pose" j="${j}" condition="${j !='none'}"/>
+      <inertial>
+        <mass>${m}</mass>
+        <inertia>
+          <ixx>${m*(3*r*r+(2*z)*(2*z))/12}</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>${m*(3*r*r+(2*z)*(2*z))/12}</iyy>
+          <iyz>0</iyz>
+          <izz>${m*(r*r)/2}</izz>
+        </inertia>
+      </inertial>
+      <visual name="${n}_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <radius>${r}</radius>
+            <length>${2*z}</length>
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.659 0.839 0.514 1</ambient>
+          <diffuse>0.659 0.839 0.514 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+      <collision name='${n}_collision'>
+        <pose>0 0 0 0 0 0 </pose>
+        <geometry>
+          <cylinder>
+            <radius>${r}</radius>
+            <length>${2*z}</length>
+          </cylinder>
+        </geometry>
+      </collision>
+    </link>
+  </xmacro_define_block>
+
+  <!-- Object -->
+  <model name="veggie">
+
+    <!-- link0 -->
+    <xmacro_block name="ellipsoid" n="link0" j='none' m="${m0}" x="${x0}" y="${y0}" z="${z0}" condition="${link0=='ellipsoid'}"/>
+    <xmacro_block name="box" n="link0" j='none' m="${m0}" x="${x0}" y="${y0}" z="${z0}" condition="${link0=='box'}"/>
+    <xmacro_block name="cylinder" n="link0" j='none' m="${m0}" r="${x0}" z="${z0}" condition="${link0=='cylinder'}"/>
+
+    <!-- link1 -->
+    <xmacro_block name="joint" n="joint0" parent="link0" child="link1" x="${x01}" y="${y01}" z="${z01}" roll="${roll01}" pitch="${pitch01}" yaw="${yaw01}" condition="${link1 != 'none'}"/>
+
+    <xmacro_block name="ellipsoid" n="link1" j='joint0' m="${m1}" x="${x1}" y="${y1}" z="${z1}" condition="${link1=='ellipsoid'}"/>
+    <xmacro_block name="box" n="link1" j='joint0' m="${m1}" x="${x1}" y="${y1}" z="${z1}" condition="${link1=='box'}"/>
+    <xmacro_block name="cylinder" n="link1" j='joint0' m="${m1}" r="${x1}" z="${z1}" condition="${link1=='cylinder'}"/>
+
+    <!-- link2 -->
+    <xmacro_block name="joint" n="joint1" parent="link0" child="link2" x="${x02}" y="${y02}" z="${z02}" roll="${roll02}" pitch="${pitch02}" yaw="${yaw02}" condition="${link2 != 'none'}"/>
+
+    <xmacro_block name="ellipsoid" n="link2" j='joint1' m="${m2}" x="${x2}" y="${y2}" z="${z2}" condition="${link2=='ellipsoid'}"/>
+    <xmacro_block name="box" n="link2" j='joint1' m="${m2}" x="${x2}" y="${y2}" z="${z2}" condition="${link2=='box'}"/>
+    <xmacro_block name="cylinder" n="link2" j='joint1' m="${m2}" r="${x2}" z="${z2}" condition="${link2=='cylinder'}"/>
+  </model>
+</sdf>

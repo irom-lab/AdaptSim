@@ -1,0 +1,16 @@
+np_seed: 42
+num_task: 1000
+parent_name: 'linearized_dp/v0/'
+
+m1_range:
+- 1.0
+- 1.0
+m2_range:
+- 1.0
+- 1.0
+b1_range:
+- 1.0
+- 1.0
+b2_range:
+- 1.0
+- 1.0

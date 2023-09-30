@@ -1,0 +1,53 @@
+data_path: veggie_task/v3_ellipsoid
+num_task: 1000
+np_seed: 42
+use_omegaconf: true
+
+link_0_type:
+  - ellipsoid
+
+obj_mu_range:
+- 0.3
+- 0.3
+obj_modulus_range:
+- 4.5
+- 4.5
+obj_density_range:
+- 1.0
+- 1.0
+link0_x_radii_range:
+- 0.015
+- 0.015
+link0_y_radii_range:
+- 0.015
+- 0.015
+link0_z_radii_range:
+- 0.010
+- 0.010
+
+joint_x_ratio_range:
+- -0.8
+- -0.5
+- 0.5
+- 0.8
+joint_y_ratio_range:
+- -0.8
+- -0.5
+- 0.5
+- 0.8
+joint_z_ratio_range:
+- 0.1
+- 0.2
+
+obj_x_range:
+- 0.68
+- 0.70
+obj_y_range:
+- -0.03
+- 0.03
+obj_z_range:
+- 0.011
+- 0.011
+obj_num_range:
+- 1
+- 1

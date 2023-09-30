@@ -1,0 +1,50 @@
+data_path: veggie_task/v1_cylinder_ellipsoid_demo
+num_task: 100
+np_seed: 42
+use_omegaconf: False
+
+obj_mu_range:
+- 0.2
+- 0.4
+obj_modulus_range:
+- 4
+- 7
+obj_density_range:
+- 1.0
+- 1.0
+obj_x_radii_range:
+- 0.008
+- 0.015
+obj_y_radii_range:
+- 0.008
+- 0.015
+obj_z_radii_range:
+- 0.003
+- 0.005
+
+joint_x_ratio_range:
+- -0.8
+- -0.5
+- 0.5
+- 0.8
+joint_y_ratio_range:
+- -0.8
+- -0.5
+- 0.5
+- 0.8
+joint_z_ratio_range:
+- 0.1
+- 0.2
+
+obj_x_range:
+- 0.64
+- 0.66
+obj_y_range:
+- -0.02
+- 0.02
+obj_z_range:
+- 0.011
+- 0.011
+obj_num_range:
+- 3
+- 3

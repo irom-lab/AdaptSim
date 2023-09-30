@@ -1,0 +1,100 @@
+directives:
+
+    - add_frame:
+        name: table_origin
+        X_PF:
+            base_frame: world
+            rotation: !Rpy { deg: [0.0, 0.0, 0.0]}
+            translation: [0., 0, 0]
+
+    - add_model:
+        name: table
+        file: package://drake_models/table/table_tri.sdf
+
+    - add_weld:
+        parent: table_origin
+        child: table::table_base
+
+    # - add_frame:
+    #     name: square_target_origin
+    #     X_PF:
+    #         base_frame: world
+    #         rotation: !Rpy { deg: [0.0, 0.0, 0.0]}
+    #         translation: [-0.7, 0, 0]
+
+    # - add_model:
+    #     name: square_target
+    #     file: package://panda_station/square_target.sdf
+
+    # - add_weld:
+    #     parent: square_target_origin
+    #     child: square_target::base_link
+
+    # - add_frame:
+    #     name: round_target_origin
+    #     X_PF:
+    #         base_frame: world
+    #         rotation: !Rpy { deg: [0.0, 0.0, 0.0]}
+    #         translation: [0, 0.7, 0]
+
+    # - add_model:
+    #     name: round_target
+    #     file: package://panda_station/round_target.sdf
+
+    # - add_weld:
+    #     parent: round_target_origin
+    #     child: round_target::base_link
+
+    # camera names (left, middle, right) are correct if you are looking 
+    # in the direction of the negative x axis 
+    
+    # left camera
+
+        #    - add_frame:
+        #        name: camera_left_origin
+        #        X_PF:
+        #            base_frame: world
+        #            rotation: !Rpy { deg: [-135.0, 0, 0]}
+        #            translation: [0.75, -0.5, 0.5]
+        #
+        #    - add_model:
+        #        name: camera_left
+        #        file: package://panda_station/camera_box.sdf
+        #
+        #    - add_weld:
+        #        parent: camera_left_origin
+        #        child: camera_left::base
+        #
+        #    # middle camera
+        #
+        #    - add_frame:
+        #        name: camera_middle_origin
+        #        X_PF:
+        #            base_frame: world
+        #            rotation: !Rpy { deg: [-146.3, 0, 90.0]}
+        #            translation: [1.25, 0, 0.75]
+        #
+        #    - add_model:
+        #        name: camera_middle
+        #        file: package://panda_station/camera_box.sdf
+        #
+        #    - add_weld:
+        #        parent: camera_middle_origin
+        #        child: camera_middle::base
+        #
+        #    # right camera (this camera is on the right and further in the negative x direction)
+        #
+        #    - add_frame:
+        #        name: camera_right_origin
+        #        X_PF:
+        #            base_frame: world
+        #            rotation: !Rpy { deg: [-125.3, 0, -150.0]}
+        #            translation: [0.25, 0.5, 0.5]
+        #
+        #    - add_model:
+        #        name: camera_right
+        #        file: package://panda_station/camera_box.sdf
+        #
+        #    - add_weld:
+        #        parent: camera_right_origin
+        #        child: camera_right::base

@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+
+  <xmacro_define_value name="m0" value="0.01" />
+  <xmacro_define_value name="x0" value="0.02" />
+  <xmacro_define_value name="y0" value="0.02" />
+  <xmacro_define_value name="z0" value="0.005" />
+  <xmacro_define_value name="x01" value="0.01" />
+  <xmacro_define_value name="y01" value="0.01" />
+  <xmacro_define_value name="z01" value="0.01" />
+  <xmacro_define_value name="roll01" value="0.01" />
+  <xmacro_define_value name="pitch01" value="0.01" />
+  <xmacro_define_value name="yaw01" value="0.01" />
+  <xmacro_define_value name="m1" value="0.01" />
+  <xmacro_define_value name="x1" value="0.02" />
+  <xmacro_define_value name="y1" value="0.02" />
+  <xmacro_define_value name="z1" value="0.005"/>
+
+  <model name="ellipsoid_box">
+    <link name="base">
+      <inertial>
+        <mass>${m0}</mass>
+        <inertia>
+          <ixx>${m0*(y0*y0+z0*z0)/5}</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <ixx>${m0*(x0*x0+z0*z0)/5}</ixx>
+          <iyz>0</iyz>
+          <ixx>${m0*(x0*x0+y0*y0)/5}</ixx>
+        </inertia>
+      </inertial>
+
+      <visual name="base_visual">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <ellipsoid>
+            <radii>${x0} ${y0} ${z0}</radii>
+          </ellipsoid>
+        </geometry>
+        <material>
+          <ambient>0.659 0.839 0.514 1</ambient>
+          <diffuse>0.659 0.839 0.514 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+
+      <collision name="base_collision">
+        <pose>0 0 0 0 0 0 </pose>
+        <geometry>
+          <ellipsoid>
+            <radii>${x0} ${y0} ${z0}</radii>
+          </ellipsoid>
+        </geometry>
+      </collision>
+    </link>
+
+    <link name="box">
+      <pose relative_to="joint">0 0 0 0 0 0</pose>
+      <inertial>
+        <mass>${m1}</mass>
+        <inertia>
+          <ixx>${m1*(y1*y1+z1*z1)/12}</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>${m1*(x1*x1+z1*z1)/12}</iyy>
+          <iyz>0</iyz>
+          <izz>${m1*(x1*x1+y1*y1)/12}</izz>
+        </inertia>
+      </inertial>
+
+      <visual name="box_visual">
+        <pose>0 0 0 0 0 0 </pose>
+        <geometry>
+          <box>
+            <size>${x1} ${y1} ${z1}</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.659 0.839 0.514 1</ambient>
+          <diffuse>0.659 0.839 0.514 1</diffuse>
+          <specular>0 0 0 0</specular>
+          <emissive>0 0 0 1</emissive>
+        </material>
+      </visual>
+
+      <collision name='box_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>${x1} ${y1} ${z1}</size>
+          </box>
+        </geometry>
+      </collision>
+    </link>
+
+    <joint name="joint" type="fixed">
+      <pose relative_to="base">${x01} ${y01} ${z01} ${roll01} ${pitch01} ${yaw01}</pose>
+      <parent>base</parent>
+      <child>box</child>
+      <!-- <axis>
+        <xyz>1 0 0</xyz>
+      </axis> -->
+    </joint>
+  </model>
+</sdf>

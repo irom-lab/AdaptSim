@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+	<model name="bottle">
+		<link name="link0">
+			<inertial>
+				<mass>0.3</mass>
+				<inertia>
+					<ixx>3.175e-1</ixx>
+					<ixy>0</ixy>
+					<ixz>0</ixz>
+					<iyy>3.175e-1</iyy>
+					<iyz>0</iyz>
+					<izz>1.35e-1</izz>
+				</inertia>
+			</inertial>
+			<visual name="base_visual">
+				<pose>0 0 0 0 0 0</pose>
+				<geometry>
+					<cylinder>
+						<radius>0.03</radius>
+						<length>0.1</length>
+					</cylinder>
+				</geometry>
+				<material>
+					<ambient>0.659 0.839 0.514 1</ambient>
+					<diffuse>0.659 0.839 0.514 1</diffuse>
+					<specular>0 0 0 0</specular>
+					<emissive>0 0 0 0.2</emissive>
+				</material>
+			</visual>
+			<collision name="base_collision">
+				<pose>0 0 0 0 0 0 </pose>
+				<geometry>
+					<cylinder>
+						<radius>0.03</radius>
+						<length>0.1</length>
+					</cylinder>
+				</geometry>
+				<drake:proximity_properties>
+					<drake:compliant_hydroelastic/>
+					<drake:mesh_resolution_hint>0.1</drake:mesh_resolution_hint>
+					<drake:hydroelastic_modulus>2e5</drake:hydroelastic_modulus>
+					<drake:hunt_crossley_dissipation>1.0</drake:hunt_crossley_dissipation>
+					<drake:mu_static>0.1</drake:mu_static>
+					<drake:mu_dynamic>0.1</drake:mu_dynamic>
+					<drake:relaxation_time>0.1</drake:relaxation_time>
+				</drake:proximity_properties>
+			</collision>
+		</link>
+	</model>
+</sdf>

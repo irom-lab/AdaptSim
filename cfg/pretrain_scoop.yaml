@@ -1,0 +1,290 @@
+seed: 42
+device: cpu
+num_trainer: 2
+num_env_per_trainer: 5
+
+exp_name: pretrain_scoop
+out_folder: result/${exp_name}
+data_folder: ${out_folder}/data
+agent: AdaptTrainer
+eval: False
+task: Scoop
+
+wandb:
+  entity:
+  project:
+  name: ${exp_name}
+
+env:
+  render: false
+  name: Scoop
+  max_train_steps: 1
+  max_eval_steps: 1
+  action_dim: 3
+  camera:
+  dt: 0.005
+  specific:
+    mid_frame_timestamp: [0.2, 0.3, 0.4, 0.5]
+    pitch_range: [3, 10]
+    pd1_range: [-0.2, 0.2]
+    s_x_veggie_tip_range: [-0.015, -0.005]
+    obs_lb: [0.64, -0.05]
+    obs_ub: [0.72, 0.05]
+
+adapt:
+  max_itr: 1  
+  num_adapt_init: 10000
+  num_adapt: 0
+  init_inference_update_wait: 100
+  inference_update_freq: 10
+  num_adapt_step: 8
+  replay_ratio: 16
+  batch_size: 64
+  eval_freq: 50
+  twin_threshold: 0.14  # ~8% in each of the two dimensions, excluding the link dimension
+  lifetime_threshold: 2
+  reward_threshold: 0.
+  spawn:
+    # num_particle_init: 128
+    num_particle_init: 2
+    num_particle: 0
+    inner_perturbation: 0.025
+    meta_perturbation: 0.05
+    kill_freq:
+    reward_threshold:
+  num_meta_target_task: 24  # not relevant in pretrain
+  num_meta_test_task: 24  # not relevant in pretrain
+  # num_inner_target_task: 12
+  num_inner_target_task: 3
+  num_task_train: 48
+  eps_init:
+    init: 1.0
+    period: 1000
+    end: 0.1
+    step: -0.1  # always use small step
+  eps: # not use in pretrain
+    init: 0.5 
+    period: 10
+    end: 0.2
+    step: -0.1
+  meta_policy_option: reuse
+  inner_policy_option: reuse
+
+inference:
+  seed: ${seed}
+  device: ${device}
+  eval: ${eval}
+  memory_capacity: 10000
+  lr_c: 0.001
+  lr_c_schedule: false
+  tau: 0.01
+  single_step: False
+  gamma: 0.9
+  #
+  num_feature: 39  # 3 obs, each with 6 steps, each with 2 dim, and reward
+  arch:
+    state_only: True
+    skip_dim: 0
+    mlp_dim:
+      critic:
+        - 64
+        - 64
+    append_dim:
+      critic: 0
+    use_ln: False
+
+util:
+  name: ${task}
+  seed: ${seed}
+  target_obs: traj_plus_reward
+  reward_scaling: raw
+  num_episode_for_obs: 3
+  obs_lb: [0.6, -0.2] # x,y
+  obs_ub: [1.1, 0.2]
+
+policy:
+  name: Value
+  seed: ${seed}
+  device: ${device}
+  out_folder: ${data_folder}/policy
+  num_env: ${num_env_per_trainer}
+  action_dim: ${env.action_dim}
+  max_steps_train: ${env.max_train_steps}
+  max_steps_eval: ${env.max_eval_steps}
+  eval: ${eval}
+  target_eval_reward: 0.95
+  # init_max_sample_steps: 1200
+  init_max_sample_steps: 32
+  max_sample_step_decay: 0
+  # max_sample_step_min: 1200
+  max_sample_step_min: 32
+  #
+  num_warmup_step_percentage: 0
+  # num_eval_episode: 24
+  num_eval_episode: 4
+  memory_capacity: 1000
+  # update_freq: 48
+  update_freq: 8
+  replay_ratio: 16
+  # batch_size: 64
+  batch_size: 4
+  # check_freq: 5 # every 240, 3 times
+  check_freq: 1
+  #
+  save_top_k: 1
+  eps:  # not used
+    init: 1.0
+    period_percentage: 0.1
+    end: 0.5
+    step: -0.1
+  learner:
+    name: NAF
+    seed: ${seed}
+    action_dim: ${env.action_dim}
+    eval: ${eval}
+    device: ${device}
+    noise_scale: 1.0
+    update_period: 1
+    lr_c: 0.001
+    lr_c_schedule: False
+    tau: 0.01
+    single_step: True
+    arch:
+      state_only: True
+      input_dim: 2  # 1-link pos for 1 obj
+      mlp_dim:
+        critic:
+          - 128
+          - 3
+      append_dim: 
+        critic: 0
+      use_ln: False
+  utility:
+    name: Scoop
+    device: ${device}
+    lb: # dummy, not used
+      - 0.1
+    ub:
+      - 0.1
+
+param:
+  name: ${task}
+  seed: ${seed}
+  device: ${device}
+  data_path: ${data_folder}
+  obj_num: 1
+  num_link: 1
+  num_param_bin_for_continuous: 3
+  sample_ood_full_width_fraction: 1.0
+  param:
+    OBJ_MU:
+      dist: gaussian
+      step: 0.15
+      minimum: 0.25
+      maximum: 0.4
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+    OBJ_MODULUS:
+      dist: gaussian
+      step: 0.15
+      minimum: 4
+      maximum: 5.5
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+    LINK0:
+      dist: gaussian
+      step: 1
+      minimum: 0
+      maximum: 1
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+      discrete: True
+    Z0:
+      dist: gaussian
+      step: 0.15
+      minimum: 0.0075
+      maximum: 0.0125
+      init_std: 0.0001
+      min_std: 0.0001
+      max_std: 0.0001
+      fixed: false
+    OBJ_DENSITY:
+      dist: uniform
+      range:
+        - 1
+        - 1
+      minimum: 1
+      maximum: 1
+      fixed: true
+    X0:
+      dist: uniform
+      range:
+        - 0.015
+        - 0.015
+      minimum: 0.015
+      maximum: 0.015
+      fixed: true
+    Y0:
+      dist: uniform
+      range:
+        - 0.015
+        - 0.015
+      minimum: 0.015
+      maximum: 0.015
+      fixed: true
+  obj_x_range: [0.685, 0.695]
+  obj_y_range: [-0.01, 0.01]
+
+param_target:
+  seed: ${seed}
+  device: ${device}
+  data_path: ${data_folder}
+  param:
+    OBJ_MU:
+      dist: uniform
+      range:
+        - 0.2
+        - 0.2
+      fixed: true
+    OBJ_MODULUS:
+      dist: uniform
+      range:
+        - 5.0
+        - 5.0
+      fixed: true
+    LINK0:
+      dist: uniform
+      range:
+        - 0 # ellipsoid
+        - 0
+      fixed: true
+    OBJ_DENSITY:
+      dist: uniform
+      range:
+        - 1
+        - 1
+      fixed: true
+    X0:
+      dist: uniform
+      range:
+        - 0.015
+        - 0.015
+      fixed: true
+    Y0:
+      dist: uniform
+      range:
+        - 0.015
+        - 0.015
+      fixed: true
+    Z0:
+      dist: uniform
+      range:
+        - 0.010
+        - 0.010
+      fixed: true

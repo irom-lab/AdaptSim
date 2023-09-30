@@ -1,0 +1,25 @@
+np_seed: 42
+num_task: 100
+parent_name: 'bottle_task/v4_adapt_2/'
+use_omegaconf: True
+
+obj_mu_range:
+- 0.18
+- 0.18
+obj_modulus_range:
+- 6.0
+- 6.0
+obj_com_x_range:
+- 0
+- 0
+obj_com_y_range:
+- 0.01
+- 0.01
+
+goal:
+  radius_range: # added to 0.45, [0.80, 0.90]
+    - 0.35
+    - 0.45
+  yaw_range:
+    - -0.262  # 15 degrees
+    - 0.262
