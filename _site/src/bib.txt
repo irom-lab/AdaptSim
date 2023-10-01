@@ -1,0 +1,6 @@
+@inproceedings{ren2023adaptsim,
+title = {AdaptSim: Task-Driven Simulation Adaptation for Sim-to-Real Transfer},
+author = {Ren, Allen Z. and Dai, Hongkai and Burchfiel, Benjamin and Majumdar, Anirudha},
+booktitle={Proceedings of the Conference on Robot Learning (CoRL)},
+year = {2023},
+}
