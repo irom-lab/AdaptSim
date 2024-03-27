@@ -102,8 +102,11 @@ class DoublePendulumLinearizedEnv():
     def parameter(self):
         return self.task.true_m + self.task.true_b
 
-    def step(self, action):
-        K = action
+    def step(self, action=None):
+        if action is None:
+            K = self.get_optimal_K()
+        else:
+            K = action
         if self.dt > 0:
             return self.step_discrete(K)
         else:

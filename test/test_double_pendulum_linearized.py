@@ -32,6 +32,6 @@ if __name__ == '__main__':
     # Reset environment - this also calculates the LQR action
     obs = env.reset(task=task)
 
-    # Action is calculated with LQR using mass and damping values from the task when resetting the environment
+    # Action is calculated with LQR using mass and damping values from the task, thus optimal
     obs, reward, done, info = env.step(action=None)
     print('Reward: ', reward)
